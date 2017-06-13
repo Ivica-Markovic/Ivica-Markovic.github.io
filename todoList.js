@@ -49,13 +49,48 @@ var todoList = {
         todo.completed = true;
       }
     }, this);
+    view.displayTodos();
   }
 };
 
+var handler = {
+  toggleAllTodos: function () {
+    todoList.toggleAllTodos();
+  },
+  addTodo: function () {
+    var addTodoInput = document.getElementById('addTodoInput');
+    todoList.addTodo(addTodoInput.value);
+    addTodoInput.value = '';
+  },
+}
+
 var view = {
-  displayTodos: function(){
-    todoList.todos.forEach(function (task){
-      console.log(task.todo, " completed ", task.completed);
-    });
+  displayTodos: function() {
+    //select the ul element and clear before going through
+    //todo list
+    var todoUi = document.querySelector('ul');
+    todoUi.innerHTML = '';
+
+    //Loop through to todos and check to see if todo is completed
+    todoList.todos.forEach(function (todo) {
+      var todoLi = document.createElement('li');
+      var deleteButton = (this.createDeleteButton());
+
+      if (todo.completed === true) {
+        todoLi.textContent = ('(x) ' + todo.todo + ' ');
+        todoLi.appendChild(deleteButton);
+        todoUi.appendChild(todoLi);
+      }else {
+        todoLi.textContent = ('( ) ' + todo.todo + ' ');
+        todoLi.appendChild(deleteButton);
+        todoUi.appendChild(todoLi);
+      }
+    }, this);
+  },
+  createDeleteButton: function() {
+    var deleteButton = document.createElement('button');
+    deleteButton.textContent = 'delete';
+    deleteButton.id = 'deleteButton';
+    return deleteButton;
   }
 }

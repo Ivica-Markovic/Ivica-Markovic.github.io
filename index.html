@@ -3,11 +3,21 @@
 
 <head>
 	<title> Personal Todo </title>
+  <script src="todoList.js"></script>
 </head>
-
 <body>
 	<h1> Personal Todo </h1>
-	<script src="todoList.js"></script>
+  <div>
+    <button onclick="handler.toggleAllTodos()"> Toggle All </button>
+  </div>
+  <div>
+    <button onclick="handler.addTodo()">Add Todo </button>
+    <input id='addTodoInput', type='text'></input>
+  </div>
+  <div>
+    <ul>
+    </ul>
+  </div>
 </body>
 
 </html>
