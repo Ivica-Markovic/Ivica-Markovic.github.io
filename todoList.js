@@ -1,14 +1,5 @@
 var todoList = {
-  todos: [{
-    todo: 'Build App',
-    completed: false
-  },
-  {
-    todo: 'Test App',
-    completed: false
-  }
-
-  ],
+  todos: [],
   addTodo: function(todoTask){
     todoList.todos.push({todo: todoTask, completed: false});
     view.displayTodos();
@@ -62,6 +53,18 @@ var handler = {
     todoList.addTodo(addTodoInput.value);
     addTodoInput.value = '';
   },
+  deleteTodo: function (position) {
+    todoList.deleteTodo(position);
+    view.displayTodos();
+  },
+  changeTodo: function (position) {
+    todoList.changeTodo(position);
+    view.displayTodos();
+  },
+  toggleTodo: function(position) {
+    todoList.toggleTodo(position);
+    view.displayTodos();
+  }
 }
 
 var view = {
@@ -72,25 +75,55 @@ var view = {
     todoUi.innerHTML = '';
 
     //Loop through to todos and check to see if todo is completed
-    todoList.todos.forEach(function (todo) {
+    todoList.todos.forEach(function (todo, position) {
       var todoLi = document.createElement('li');
       var deleteButton = (this.createDeleteButton());
+      var changeButton = (this.createChangeButton());
+      var toggleButton = (this.createToggleButton());
 
       if (todo.completed === true) {
         todoLi.textContent = ('(x) ' + todo.todo + ' ');
-        todoLi.appendChild(deleteButton);
-        todoUi.appendChild(todoLi);
       }else {
         todoLi.textContent = ('( ) ' + todo.todo + ' ');
-        todoLi.appendChild(deleteButton);
-        todoUi.appendChild(todoLi);
       }
+
+      todoLi.appendChild(deleteButton);
+      todoLi.appendChild(changeButton);
+      todoLi.appendChild(toggleButton);
+      todoLi.id = position;
+      todoUi.appendChild(todoLi);
     }, this);
   },
   createDeleteButton: function() {
     var deleteButton = document.createElement('button');
     deleteButton.textContent = 'delete';
-    deleteButton.id = 'deleteButton';
+    deleteButton.className = 'deleteButton';
     return deleteButton;
+  },
+  createChangeButton: function() {
+    var changeButton = document.createElement('button');
+    changeButton.textContent = 'Update';
+    changeButton.className = 'changeButton';
+    return changeButton;
+  },
+  createToggleButton: function() {
+    var toggleButton = document.createElement('button');
+    toggleButton.textContent = 'Toggle';
+    toggleButton.className = 'toggleButton';
+    return toggleButton;
+  },
+  setEventListener: function() {
+    var todoUl = document.querySelector('ul')
+
+    todoUl.addEventListener('click', function (event) {
+      if (event.target.className === 'deleteButton') {
+        handler.deleteTodo(parseInt(event.target.parentNode.id));
+      }else if (event.target.className === 'changeButton') {
+        handler.changeTodo(parseInt(event.target.parentNode.id));
+      }else if (event.target.className === 'toggleButton') {
+        handler.toggleTodo(parseInt(event.target.parentNode.id));
+      }
+    });
   }
 }
+view.setEventListener();
