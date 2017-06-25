@@ -1,3 +1,14 @@
+/*
+List of items to complete
+-Enter adds a todoList
+-Enter over todo to edit
+-setup local storage
+-Customise view
+-insert director for routing hyperlinks
+-Add Twitter Feed into surronding white space
+
+*/
+
 var todoList = {
   todos: [],
   addTodo: function(todoTask){
@@ -113,7 +124,7 @@ var view = {
     return toggleButton;
   },
   setEventListener: function() {
-    var todoUl = document.querySelector('ul')
+    var todoUl = document.querySelector('ul');
 
     todoUl.addEventListener('click', function (event) {
       if (event.target.className === 'deleteButton') {
@@ -124,6 +135,18 @@ var view = {
         handler.toggleTodo(parseInt(event.target.parentNode.id));
       }
     });
+    var inputButton = document.getElementById('addTodoInput')
+
+    inputButton.addEventListener('keyup', function (event) {
+      console.log(event.code);
+    });
   }
 }
 view.setEventListener();
+
+$(function() {
+  $('p').click(function(){
+    console.log('clicked the pargraph with JQuery');
+
+  });
+});
