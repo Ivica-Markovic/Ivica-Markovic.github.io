@@ -18,9 +18,8 @@ var todoList = {
     this .todos.splice(position, 1);
     view.displayTodos();
   },
-  changeTodo: function(position) {
-    var newTodo = prompt();
-    todoList.todos[position].todo = newTodo;
+  changeTodo: function(position, value) {
+    todoList.todos[position].todo = value;
     view.displayTodos();
   },
   toggleTodo: function(position) {
@@ -72,8 +71,8 @@ var handler = {
     todoList.deleteTodo(position);
     view.displayTodos();
   },
-  changeTodo: function (position) {
-    todoList.changeTodo(position);
+  changeTodo: function (position, value) {
+    todoList.changeTodo(position, value);
     view.displayTodos();
   },
   toggleTodo: function(position) {
@@ -137,6 +136,17 @@ var view = {
         handler.changeTodo(parseInt(event.target.parentNode.id));
       }else if (event.target.className === 'toggleButton') {
         handler.toggleTodo(parseInt(event.target.parentNode.id));
+      }else {
+        $(function() {
+          //var input = event.target.closest('li');
+          //console.log(input.value);
+          //input.value.focus();
+          var $input = $(event.target).closest('li').addClass('editing').find('.edit');
+          $input.val($input.val()).focus();
+          console.log($input);
+          //handler.changeTodo(parseInt(input.id));
+        });
+
       }
     });
     var inputButton = document.getElementById('addTodoInput');
