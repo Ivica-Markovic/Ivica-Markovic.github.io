@@ -1,6 +1,5 @@
 /*
 List of items to complete
--Enter adds a todoList
 -Enter over todo to edit
 -setup local storage
 -Customise view
@@ -60,9 +59,14 @@ var handler = {
     todoList.toggleAllTodos();
   },
   addTodo: function () {
-    var addTodoInput = document.getElementById('addTodoInput');
-    todoList.addTodo(addTodoInput.value);
-    addTodoInput.value = '';
+    var userInput = document.getElementById('addTodoInput')
+
+    if (event.code === 'Enter') {
+      todoList.addTodo(userInput.value);
+    }else {
+      return;
+    }
+    userInput.value = ''
   },
   deleteTodo: function (position) {
     todoList.deleteTodo(position);
@@ -135,10 +139,9 @@ var view = {
         handler.toggleTodo(parseInt(event.target.parentNode.id));
       }
     });
-    var inputButton = document.getElementById('addTodoInput')
-
-    inputButton.addEventListener('keyup', function (event) {
-      console.log(event.code);
+    var inputButton = document.getElementById('addTodoInput');
+    inputButton.addEventListener('keyup', function(event) {
+      handler.addTodo(event);
     });
   }
 }
