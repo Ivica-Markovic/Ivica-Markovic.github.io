@@ -92,17 +92,24 @@ var view = {
     todoList.todos.forEach(function (todo, position) {
       var todoLi = document.createElement('li');
       var deleteButton = (this.createDeleteButton());
-      var changeButton = (this.createChangeButton());
+      //var changeButton = (this.createChangeButton());
       var toggleButton = (this.createToggleButton());
 
       if (todo.completed === true) {
-        todoLi.textContent = ('(x) ' + todo.todo + ' ');
+        todoLi.textContent = ('(x)' + ' ');
       }else {
-        todoLi.textContent = ('( ) ' + todo.todo + ' ');
+        todoLi.textContent = ('( ) ' + ' ');
       }
 
+      var x = document.createElement("INPUT");
+      x.setAttribute("type", "text");
+      x.setAttribute("value", todo.todo);
+      x.setAttribute("autoFocus", true);
+      //x.setAttribute("value", "Hello World!");
+      todoLi.appendChild(x);
+      todoLi.className = 'edit';
       todoLi.appendChild(deleteButton);
-      todoLi.appendChild(changeButton);
+      //todoLi.appendChild(changeButton);
       todoLi.appendChild(toggleButton);
       todoLi.id = position;
       todoUi.appendChild(todoLi);
@@ -136,18 +143,13 @@ var view = {
         handler.changeTodo(parseInt(event.target.parentNode.id));
       }else if (event.target.className === 'toggleButton') {
         handler.toggleTodo(parseInt(event.target.parentNode.id));
-      }else {
-        $(function() {
-          //var input = event.target.closest('li');
-          //console.log(input.value);
-          //input.value.focus();
-          var $input = $(event.target).closest('li').addClass('editing').find('.edit');
-          $input.val($input.val()).focus();
-          console.log($input);
-          //handler.changeTodo(parseInt(input.id));
-        });
-
-      }
+      }//else {
+        //var input = event.target.closest('li');
+        //console.log(event.target);
+        //input.focus();
+        //console.log(input.value);
+        //handler.changeTodo(parseInt(input.id));
+      //}
     });
     var inputButton = document.getElementById('addTodoInput');
     inputButton.addEventListener('keyup', function(event) {
