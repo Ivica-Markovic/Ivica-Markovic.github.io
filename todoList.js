@@ -1,22 +1,10 @@
 /*
 List of items to complete
+-**setup local storage
 -Enter over todo to edit **Need CSS
--setup local storage
--Customise view
+-Customise view with CSS Styles
 -insert director for routing hyperlinks
 -Add Twitter Feed into surronding white space
-
-*/
-
-
-
-/*
-// two parts to local storage:
-1. loading of the app should invoke local storage.getItem(namespace)
-2. Each creation of a todo should store localStorage.setItem(namespace, JSON.stringify(data));
-notes:
-a) store function should contain both getItem and setItem code
-b) Initialisation should be from view object
 
 */
 
