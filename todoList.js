@@ -1,11 +1,22 @@
 /*
 List of items to complete
--Enter adds a todoList
--Enter over todo to edit
+-Enter over todo to edit **Need CSS
 -setup local storage
 -Customise view
 -insert director for routing hyperlinks
 -Add Twitter Feed into surronding white space
+
+*/
+
+
+
+/*
+// two parts to local storage:
+1. loading of the app should invoke local storage.getItem(namespace)
+2. Each creation of a todo should store localStorage.setItem(namespace, JSON.stringify(data));
+notes:
+a) store function should contain both getItem and setItem code
+b) Initialisation should be from view object
 
 */
 
@@ -19,9 +30,8 @@ var todoList = {
     this .todos.splice(position, 1);
     view.displayTodos();
   },
-  changeTodo: function(position) {
-    var newTodo = prompt();
-    todoList.todos[position].todo = newTodo;
+  changeTodo: function(position, value) {
+    todoList.todos[position].todo = value;
     view.displayTodos();
   },
   toggleTodo: function(position) {
@@ -60,16 +70,21 @@ var handler = {
     todoList.toggleAllTodos();
   },
   addTodo: function () {
-    var addTodoInput = document.getElementById('addTodoInput');
-    todoList.addTodo(addTodoInput.value);
-    addTodoInput.value = '';
+    var userInput = document.getElementById('addTodoInput')
+
+    if (event.code === 'Enter') {
+      todoList.addTodo(userInput.value);
+    }else {
+      return;
+    }
+    userInput.value = ''
   },
   deleteTodo: function (position) {
     todoList.deleteTodo(position);
     view.displayTodos();
   },
-  changeTodo: function (position) {
-    todoList.changeTodo(position);
+  changeTodo: function (position, value) {
+    todoList.changeTodo(position, value);
     view.displayTodos();
   },
   toggleTodo: function(position) {
@@ -89,17 +104,24 @@ var view = {
     todoList.todos.forEach(function (todo, position) {
       var todoLi = document.createElement('li');
       var deleteButton = (this.createDeleteButton());
-      var changeButton = (this.createChangeButton());
+      //var changeButton = (this.createChangeButton());
       var toggleButton = (this.createToggleButton());
 
       if (todo.completed === true) {
-        todoLi.textContent = ('(x) ' + todo.todo + ' ');
+        todoLi.textContent = ('(x)' + ' ');
       }else {
-        todoLi.textContent = ('( ) ' + todo.todo + ' ');
+        todoLi.textContent = ('( ) ' + ' ');
       }
 
+      var x = document.createElement("INPUT");
+      x.setAttribute("type", "text");
+      x.setAttribute("value", todo.todo);
+      x.setAttribute("autoFocus", true);
+      //x.setAttribute("value", "Hello World!");
+      todoLi.appendChild(x);
+      todoLi.className = 'edit';
       todoLi.appendChild(deleteButton);
-      todoLi.appendChild(changeButton);
+      //todoLi.appendChild(changeButton);
       todoLi.appendChild(toggleButton);
       todoLi.id = position;
       todoUi.appendChild(todoLi);
@@ -122,7 +144,9 @@ var view = {
     toggleButton.textContent = 'Toggle';
     toggleButton.className = 'toggleButton';
     return toggleButton;
-  },
+  }
+}
+var appInit = {
   setEventListener: function() {
     var todoUl = document.querySelector('ul');
 
@@ -133,16 +157,21 @@ var view = {
         handler.changeTodo(parseInt(event.target.parentNode.id));
       }else if (event.target.className === 'toggleButton') {
         handler.toggleTodo(parseInt(event.target.parentNode.id));
-      }
+      }//else {
+        //var input = event.target.closest('li');
+        //console.log(event.target);
+        //input.focus();
+        //console.log(input.value);
+        //handler.changeTodo(parseInt(input.id));
+      //}
     });
-    var inputButton = document.getElementById('addTodoInput')
-
-    inputButton.addEventListener('keyup', function (event) {
-      console.log(event.code);
+    var inputButton = document.getElementById('addTodoInput');
+    inputButton.addEventListener('keyup', function(event) {
+      handler.addTodo(event);
     });
   }
 }
-view.setEventListener();
+appInit.setEventListener();
 
 $(function() {
   $('p').click(function(){
