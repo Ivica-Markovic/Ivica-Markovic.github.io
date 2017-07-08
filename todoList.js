@@ -51,7 +51,6 @@ var todoList = {
           completedTodo++;
         }
     });
-
     //loop through each of the objects in the todoList.todos arrays again
     //and set all to completed unless they all already are
     this.todos.forEach(function(todo, position) {
@@ -62,6 +61,14 @@ var todoList = {
       }
     }, this);
     view.displayTodos();
+  },
+  store: function(namespace, data) {
+    if (arguments.length > 1) {
+				return localStorage.setItem(namespace, JSON.stringify(data));
+		} else {
+		    var store = localStorage.getItem(namespace);
+				return (store && JSON.parse(store)) || [];
+    }
   }
 };
 
@@ -125,6 +132,7 @@ var view = {
       todoLi.appendChild(toggleButton);
       todoLi.id = position;
       todoUi.appendChild(todoLi);
+      todoList.store('todos-local', todoList.todos);
     }, this);
   },
   createDeleteButton: function() {
@@ -146,7 +154,11 @@ var view = {
     return toggleButton;
   }
 }
+
 var appInit = {
+  init: function() {
+    todoList.todos = todoList.store('todos-local');
+  },
   setEventListener: function() {
     var todoUl = document.querySelector('ul');
 
@@ -172,6 +184,8 @@ var appInit = {
   }
 }
 appInit.setEventListener();
+appInit.init();
+view.displayTodos();
 
 $(function() {
   $('p').click(function(){
