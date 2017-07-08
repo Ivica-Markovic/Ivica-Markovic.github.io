@@ -1,10 +1,22 @@
 /*
 List of items to complete
--Enter over todo to edit
+-Enter over todo to edit **Need CSS
 -setup local storage
 -Customise view
 -insert director for routing hyperlinks
 -Add Twitter Feed into surronding white space
+
+*/
+
+
+
+/*
+// two parts to local storage:
+1. loading of the app should invoke local storage.getItem(namespace)
+2. Each creation of a todo should store localStorage.setItem(namespace, JSON.stringify(data));
+notes:
+a) store function should contain both getItem and setItem code
+b) Initialisation should be from view object
 
 */
 
@@ -132,7 +144,9 @@ var view = {
     toggleButton.textContent = 'Toggle';
     toggleButton.className = 'toggleButton';
     return toggleButton;
-  },
+  }
+}
+var appInit = {
   setEventListener: function() {
     var todoUl = document.querySelector('ul');
 
@@ -157,7 +171,7 @@ var view = {
     });
   }
 }
-view.setEventListener();
+appInit.setEventListener();
 
 $(function() {
   $('p').click(function(){
