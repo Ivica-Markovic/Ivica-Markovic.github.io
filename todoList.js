@@ -132,8 +132,8 @@ var view = {
       todoLi.appendChild(toggleButton);
       todoLi.id = position;
       todoUi.appendChild(todoLi);
-      todoList.store('todos-local', todoList.todos);
     }, this);
+    todoList.store('todos-local', todoList.todos);
   },
   createDeleteButton: function() {
     var deleteButton = document.createElement('button');
