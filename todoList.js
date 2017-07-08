@@ -132,7 +132,7 @@ var view = {
       todoLi.appendChild(toggleButton);
       todoLi.id = position;
       todoUi.appendChild(todoLi);
-      todoList.store('todos-jquery', todoList.todos);
+      todoList.store('todos-local', todoList.todos);
     }, this);
   },
   createDeleteButton: function() {
@@ -157,7 +157,7 @@ var view = {
 
 var appInit = {
   init: function() {
-    todoList.todos = todoList.store('todos-jquery');
+    todoList.todos = todoList.store('todos-local');
   },
   setEventListener: function() {
     var todoUl = document.querySelector('ul');
