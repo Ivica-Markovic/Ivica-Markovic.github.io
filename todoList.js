@@ -78,9 +78,14 @@ var handler = {
     todoList.deleteTodo(position);
     view.displayTodos();
   },
-  changeTodo: function (position, value) {
-    todoList.changeTodo(position, value);
-    view.displayTodos();
+  changeTodo: function (event) {
+
+    if (event.key === 'Enter') {
+      var position = parseInt(event.target.parentNode.id);
+      var value = event.target.value;
+      todoList.changeTodo(position, value);
+      view.displayTodos();
+    }
   },
   toggleTodo: function(position) {
     todoList.toggleTodo(position);
@@ -112,9 +117,9 @@ var view = {
       x.setAttribute("type", "text");
       x.setAttribute("value", todo.todo);
       x.setAttribute("autoFocus", true);
+      x.setAttribute("id", "edit")
       //x.setAttribute("value", "Hello World!");
       todoLi.appendChild(x);
-      todoLi.className = 'edit';
       todoLi.appendChild(deleteButton);
       //todoLi.appendChild(changeButton);
       todoLi.appendChild(toggleButton);
@@ -153,27 +158,30 @@ var appInit = {
     todoUl.addEventListener('click', function (event) {
       if (event.target.className === 'deleteButton') {
         handler.deleteTodo(parseInt(event.target.parentNode.id));
-      }else if (event.target.className === 'changeButton') {
+      }else if (event.target.className === 'edit') {
         handler.changeTodo(parseInt(event.target.parentNode.id));
       }else if (event.target.className === 'toggleButton') {
         handler.toggleTodo(parseInt(event.target.parentNode.id));
-      }//else {
-        //var input = event.target.closest('li');
-        //console.log(event.target);
-        //input.focus();
-        //console.log(input.value);
-        //handler.changeTodo(parseInt(input.id));
-      //}
+      }
     });
     var inputButton = document.getElementById('addTodoInput');
     inputButton.addEventListener('keyup', function(event) {
       handler.addTodo(event);
     });
+    //listener to update input of todo list
+    todoUl.addEventListener('keyup', function(event) {
+      if (event.target.id === 'edit') {
+        handler.changeTodo(event);
+      }
+    });
   }
 }
-appInit.setEventListener();
+
 appInit.init();
 view.displayTodos();
+appInit.setEventListener();
+
+
 
 $(function() {
   $('p').click(function(){
