@@ -19,8 +19,6 @@ var todoList = {
     view.displayTodos();
   },
   changeTodo: function(position, value) {
-    console.log(position);
-    console.log(value);
     todoList.todos[position].todo = value;
     view.displayTodos();
   },
@@ -83,10 +81,8 @@ var handler = {
   changeTodo: function (event) {
 
     if (event.key === 'Enter') {
-      console.log(event.target.parentNode.id)
       var position = parseInt(event.target.parentNode.id);
       var value = event.target.value;
-      console.log('value at handler ' + value)
       todoList.changeTodo(position, value);
       view.displayTodos();
     }
