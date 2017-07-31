@@ -1,0 +1,17 @@
+1.
+once checked is ticked, the font will have a line through it
+Update the Toggle all button to bootstrap styling
+Update the todo list to checkboxes from (x)
+Style the todolists with bootstrap
+Create background for entire page
+- Delete always deletes the first position
+- Toggle should strikethrough text
+- Add a delete all function
+- Add a delete completed function
+- Save notepad text on enter or click away from notepad (If focusout or escape)
+- increase and decrese size based on button of notepad (onclick)
+- Upload to github
+- Upload to portfolio page on github
+- Add a link to github page
+- Put in a <hr> element for the footer (explore bootstrap footer)
+// Research what to add into the footer 

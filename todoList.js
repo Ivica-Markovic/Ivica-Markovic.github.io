@@ -15,7 +15,7 @@ var todoList = {
     view.displayTodos();
   },
   deleteTodo: function(position){
-    this .todos.splice(position, 1);
+    this.todos.splice(position, 1);
     view.displayTodos();
   },
   changeTodo: function(position, value) {
@@ -97,54 +97,66 @@ var view = {
   displayTodos: function() {
     //select the ul element and clear before going through
     //todo list
-    var todoUi = document.querySelector('ul');
-    todoUi.innerHTML = '';
-
+    var listContainer = document.getElementById('addTodoInput');
+    listContainer.innerHTML = '';
+    var todoDiv = document.getElementById("list");
+    var btnDiv = document.getElementById("btnDiv");
+    todoDiv.innerHTML = '';
     //Loop through to todos and check to see if todo is completed
+
     todoList.todos.forEach(function (todo, position) {
-      var todoLi = document.createElement('li');
-      var deleteButton = (this.createDeleteButton());
-      //var changeButton = (this.createChangeButton());
-      var toggleButton = (this.createToggleButton());
+      //Create elements as foundations for todolist
 
+      //var row = document.createElement("div");
+      //var col = document.createElement("div");
+      var inputGroup = document.createElement("div");
+      var spanCheckbox = document.createElement("span");
+      var inputCheckbox = document.createElement('input');
+      var input = document.createElement('input');
+      var spanButton = document.createElement("span");
+      var deleteButton = this.createDeleteButton(position);
+
+      //Set attributes for Bootstrap styling
+      //Div Elements
+      //row.setAttribute("class", "row");
+      //col.setAttribute("class", "listInput");
+      inputGroup.setAttribute("class", "input-group list");
+
+      //checkbox
+      spanCheckbox.setAttribute("class", "input-group-addon");
+      inputCheckbox.setAttribute("type", "checkbox");
+      spanButton.setAttribute("class", "input-group-btn");
+      //todolist item as an input field
+      input.setAttribute("type", "text");
+      input.setAttribute("class", "form-control findPos")
+      input.setAttribute("value", todo.todo);
+      input.setAttribute("autoFocus", true);
+      input.setAttribute("id", position);
+      //nesting into todoDiv
+      spanCheckbox.appendChild(inputCheckbox);
+      spanButton.appendChild(deleteButton);
+      inputGroup.appendChild(spanCheckbox);
+      //divButton.appendChild(input);
+      //todoRow.appendChild(deleteButton);
+      inputGroup.appendChild(input);
+      inputGroup.appendChild(spanButton);
+      //col.appendChild(inputGroup);
+      //inputGroup.appendChild(deleteButton);
+      todoDiv.appendChild(inputGroup);
       if (todo.completed === true) {
-        todoLi.textContent = ('(x)' + ' ');
+        inputCheckbox.checked = true;
       }else {
-        todoLi.textContent = ('( ) ' + ' ');
+        inputCheckbox.checked = false;
       }
-
-      var x = document.createElement("INPUT");
-      x.setAttribute("type", "text");
-      x.setAttribute("value", todo.todo);
-      x.setAttribute("autoFocus", true);
-      x.setAttribute("id", "edit")
-      //x.setAttribute("value", "Hello World!");
-      todoLi.appendChild(x);
-      todoLi.appendChild(deleteButton);
-      //todoLi.appendChild(changeButton);
-      todoLi.appendChild(toggleButton);
-      todoLi.id = position;
-      todoUi.appendChild(todoLi);
     }, this);
     todoList.store('todos-local', todoList.todos);
   },
-  createDeleteButton: function() {
+  createDeleteButton: function(position) {
     var deleteButton = document.createElement('button');
     deleteButton.textContent = 'delete';
-    deleteButton.className = 'deleteButton';
+    deleteButton.className = "btn btn-default deleteButton";
+    deleteButton.id = position
     return deleteButton;
-  },
-  createChangeButton: function() {
-    var changeButton = document.createElement('button');
-    changeButton.textContent = 'Update';
-    changeButton.className = 'changeButton';
-    return changeButton;
-  },
-  createToggleButton: function() {
-    var toggleButton = document.createElement('button');
-    toggleButton.textContent = 'Toggle';
-    toggleButton.className = 'toggleButton';
-    return toggleButton;
   }
 }
 
@@ -153,10 +165,15 @@ var appInit = {
     todoList.todos = todoList.store('todos-local');
   },
   setEventListener: function() {
-    var todoUl = document.querySelector('ul');
+    var todoList = document.getElementById('list');
 
-    todoUl.addEventListener('click', function (event) {
+    todoList.addEventListener('click', function (event) {
       if (event.target.className === 'deleteButton') {
+        //var testEvent = event.path[2];
+        console.log(event.target.id);
+        //console.log(testEvent.id)
+        //console.log(event.path[2]);
+        debugger;
         handler.deleteTodo(parseInt(event.target.parentNode.id));
       }else if (event.target.className === 'edit') {
         handler.changeTodo(parseInt(event.target.parentNode.id));
@@ -169,7 +186,7 @@ var appInit = {
       handler.addTodo(event);
     });
     //listener to update input of todo list
-    todoUl.addEventListener('keyup', function(event) {
+    todoList.addEventListener('keyup', function(event) {
       if (event.target.id === 'edit') {
         handler.changeTodo(event);
       }
@@ -180,12 +197,3 @@ var appInit = {
 appInit.init();
 view.displayTodos();
 appInit.setEventListener();
-
-
-
-$(function() {
-  $('p').click(function(){
-    console.log('clicked the pargraph with JQuery');
-
-  });
-});
