@@ -100,8 +100,7 @@ var view = {
     var listContainer = document.getElementById('addTodoInput');
     listContainer.innerHTML = '';
     var todoDiv = document.getElementById("list");
-    var btnDiv = document.getElementById("btnDiv");
-    todoDiv.innerHTML = '';
+    
     //Loop through to todos and check to see if todo is completed
 
     todoList.todos.forEach(function (todo, position) {
