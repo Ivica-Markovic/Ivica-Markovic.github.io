@@ -30,17 +30,14 @@ var todoList = {
     }
   },
   deleteCompleted: function() {
-    var newTodos = []
-    todoList.todos.forEach(function(todos, index) {
-      if (todos.completed === false) {
-        newTodos.push(todos);
-      }
+    var newTodos = todoList.todos.filter(function(todos) {
+      return todos.completed === false;
     })
+    console.log(newTodos);
     todoList.todos = newTodos;
     view.displayTodos();
   },
   deleteAllTodos: function () {
-    console.log(this.todos);
     this.todos = [];
     view.displayTodos();
   },
@@ -89,7 +86,6 @@ var handler = {
     if (event.keyCode === 13) {
       debugger;
       var position = parseInt(event.target.id);
-      console.log(event.target.value);
       var value = event.target.value;
       todoList.changeTodo(position, value);
     }
