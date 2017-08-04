@@ -136,20 +136,14 @@ var handler = {
 
 var view = {
   displayTodos: function() {
-    //select the ul element and clear before going through
-    //todo list
+
     var listContainer = document.getElementById('addTodoInput');
     listContainer.innerHTML = '';
     var todoDiv = document.getElementById("list");
     todoDiv.innerHTML = "";
     var notepadRowHeight = 15;
 
-    //Loop through to todos and check to see if todo is completed
     todoList.todos.forEach(function (todo, position) {
-      //Create elements as foundations for todolist
-
-      //var row = document.createElement("div");
-      //var col = document.createElement("div");
       var inputGroup = document.createElement("div");
       var spanCheckbox = document.createElement("span");
       var inputCheckbox = document.createElement('input');
@@ -177,12 +171,8 @@ var view = {
       spanCheckbox.appendChild(inputCheckbox);
       spanButton.appendChild(deleteButton);
       inputGroup.appendChild(spanCheckbox);
-      //divButton.appendChild(input);
-      //todoRow.appendChild(deleteButton);
       inputGroup.appendChild(input);
       inputGroup.appendChild(spanButton);
-      //col.appendChild(inputGroup);
-      //inputGroup.appendChild(deleteButton);
       todoDiv.appendChild(inputGroup);
       if (todo.completed === true) {
         inputCheckbox.checked = true;
