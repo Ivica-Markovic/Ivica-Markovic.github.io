@@ -52,15 +52,19 @@ integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/
 		padding-right: 7px;
 		padding-left:	7px;
 	}
-	.todoInput, .deleteButton{
+	.todoInput, .deleteButton, .addButton{
 		border: 11px;
 		border-radius: 0px;
 	}
 	.input-group-addon{
-		color: #292b2c;
+		background-color: #f0eeec;
 		border-color: #f0eeec;
 	}
-
+	.btn-round-xs{
+	border-radius: 11px;
+	padding-left: 10px;
+	padding-right: 10px;
+	}
 </style>
 </head>
 <body>
@@ -77,21 +81,25 @@ integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/
 					<button class="btn btn-xs btn-info" onclick="handler.toggleAllTodos()"> Toggle All </button>
 					<button class="btn btn-xs btn-info" onclick="handler.deleteCompleted()"> Delete Completed </button>
 					<button class="btn btn-xs btn-danger" id="deleteAll" onclick="handler.deleteAll()"> Delete All </button>
-					<input class="form-control" id="addTodoInput" placeholder="Type in todo" type='text' autofocus>
+					<div class="input-group">
+						<input class="form-control" id="addTodoInput" placeholder="Type in todo" type='text' autofocus>
+						<span class="input-group-btn">
+							<button class="btn btn-xs btn-default btn-round-xs addButton" id="addButton" type="button">Add</button>
+						</span>
+					</div>
 				</div>
 		</div>
 
 		<div class="container-fluid"><br>
 				<div class="row">
-
 					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 sidebar">
 						<div class="card card-block" id="list">
 						</div><br>
 					</div>
-					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-						  <textarea class="form-control form-rounded notepad" rows="15" placeholder="Notepad"></textarea>
-							<button class="btn btn-xs btn-primary rowButtonIncrease" onclick="handler.rowButtonIncrease()">  +   </button>
-							<button class="btn btn-xs btn-primary rowButtonDecrease" onclick="handler.rowButtonDecrease()">  -  </button>
+					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" id="notepadCol">
+						<button class="btn btn-xs btn-primary rowButton" id="rowIncrease" onclick="handler.rowButtonSizeChange()">  +   </button>
+						<button class="btn btn-xs btn-primary rowButton" id="rowDecrease" onclick="handler.rowButtonSizeChange()">  -  </button>
+						 <textarea class="form-control form-rounded" id="notepad" rows="15" placeholder="Notepad"></textarea>
 					</div>
 				</div>
 
@@ -121,8 +129,7 @@ integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/
 					</div>
 
 				</div>
-		</div><hr><hr color: red>
-		<hr>
+		</div>
 	</div>
 
 	<script src="todoList.js"></script>

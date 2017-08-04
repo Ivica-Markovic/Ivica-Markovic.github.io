@@ -33,7 +33,6 @@ var todoList = {
     var newTodos = todoList.todos.filter(function(todos) {
       return todos.completed === false;
     })
-    console.log(newTodos);
     todoList.todos = newTodos;
     view.displayTodos();
   },
@@ -63,32 +62,40 @@ var todoList = {
     view.displayTodos();
   },
   store: function(namespace, data) {
-    if (arguments.length > 1) {
+    if (arguments.length > 1 && namespace === 'todos-local') {
 				return localStorage.setItem(namespace, JSON.stringify(data));
-		} else {
+		}else if (arguments.length > 1 && namespace === 'notepadValue-local') {
+        localStorage.setItem(namespace, data)
+    }else if (arguments.length > 1 && namespace === 'rowHeight-local') {
+        localStorage.setItem(namespace, data)
+    }else if (namespace === 'todos-local') {
 		    var store = localStorage.getItem(namespace);
 				return (store && JSON.parse(store)) || [];
+    }else if (namespace === 'notepadValue-local') {
+      var store = localStorage.getItem(namespace);
+        return store;
+    }else {
+      var store = localStorage.getItem(namespace);
+      return store;
     }
   }
-};
+}
 
 var handler = {
   addTodo: function (event) {
-    var userInput = document.getElementById('addTodoInput')
+    var userInput = document.getElementById('addTodoInput');
     if (event.keyCode === 13) {
+      todoList.addTodo(userInput.value);
+    }else if (event.type === 'click') {
       todoList.addTodo(userInput.value);
     }else {
       return;
     }
     userInput.value = ''
   },
-  changeTodo: function (position, event) {
-    if (event.keyCode === 13) {
-      debugger;
-      var position = parseInt(event.target.id);
-      var value = event.target.value;
-      todoList.changeTodo(position, value);
-    }
+  changeTodo: function (position, value) {
+    var stripedPosition = position.slice(position.indexOf('-') + 1);
+    todoList.changeTodo(stripedPosition, value);
   },
   toggleTodo: function(checkboxState, position) {
     var stripedPosition = position.slice(position.indexOf('-') + 1);
@@ -112,6 +119,19 @@ var handler = {
   deleteAll: function() {
     todoList.deleteAllTodos();
   },
+  rowButtonSizeChange: function () {
+    var notepad = document.getElementById('notepad');
+    if (event.target.id === "rowIncrease") {
+      notepad.rows += 1;
+      todoList.store('rowHeight-local', notepad.rows)
+    }else if (event.target.id === "rowDecrease") {
+      notepad.rows -= 1;
+      todoList.store('rowHeight-local', notepad.rows)
+    }
+  },
+  updateNotepad: function () {
+    todoList.store('notepadValue-local', notepad.value)
+  }
 }
 
 var view = {
@@ -122,8 +142,9 @@ var view = {
     listContainer.innerHTML = '';
     var todoDiv = document.getElementById("list");
     todoDiv.innerHTML = "";
-    //Loop through to todos and check to see if todo is completed
+    var notepadRowHeight = 15;
 
+    //Loop through to todos and check to see if todo is completed
     todoList.todos.forEach(function (todo, position) {
       //Create elements as foundations for todolist
 
@@ -172,11 +193,15 @@ var view = {
       }
     }, this);
     todoList.store('todos-local', todoList.todos);
+
+    //Retrive Notepad storage
+    var notepad = document.getElementById('notepad');
+    notepad.value =   todoList.store('notepadValue-local');
   },
   createDeleteButton: function(position) {
     var deleteButton = document.createElement('button');
     deleteButton.textContent = 'delete';
-    deleteButton.className = "btn btn-default deleteButton";
+    deleteButton.className = "btn btn-xs btn-round-xs btn-default deleteButton";
     deleteButton.id = 'del-' + position;
     return deleteButton;
   }
@@ -185,24 +210,40 @@ var view = {
 var appInit = {
   init: function() {
     todoList.todos = todoList.store('todos-local');
+    var notepad = document.getElementById('notepad');
+    notepad.rows = todoList.store('rowHeight-local');
   },
   setEventListener: function() {
-    var todoList = document.getElementById('list');
+    var listOfTodo = document.getElementById('list');
     var todoInput = document.getElementsByClassName('todoInput')
-    todoList.addEventListener('click', function (event) {
-      if (event.target.className === 'btn btn-default deleteButton') {
+    listOfTodo.addEventListener('click', function (event) {
+      if (event.target.className === 'btn btn-xs btn-round-xs btn-default deleteButton') {
         handler.deleteTodo(event.target.id);
-      }else if (event.target.className === 'form-control todoInput') {
-        handler.changeTodo(event.target.id, event);
       }else if (event.target.type === 'checkbox') {
         var position = (event.target.id);
         var checkboxState = event.target.checked;
         handler.toggleTodo(checkboxState, position);
       }
     });
+    listOfTodo.addEventListener('keyup', function () {
+          if (event.keyCode === 13) {
+            var position = (event.target.id);
+            var stripedPosition = position.slice(position.indexOf('-') + 1);
+            var value = (event.target.value);
+            todoList.changeTodo(stripedPosition, value);
+          }
+      }, true);
     var addTodoInput = document.getElementById('addTodoInput');
     addTodoInput.addEventListener('keyup', function(event) {
       handler.addTodo(event);
+    });
+    var addButton = document.getElementById('addButton');
+    addButton.addEventListener('click', function(event) {
+      handler.addTodo(event);
+    });
+    var notepad = document.getElementById('notepad');
+    notepad.addEventListener('blur', function () {
+      handler.updateNotepad();
     });
   }
 }
