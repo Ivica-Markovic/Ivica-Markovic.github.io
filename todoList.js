@@ -244,7 +244,7 @@ appInit.setEventListener();
 
 fetch("https://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1", {
 		method: 'GET',
-		mode: 'no-cors'
+		mode: 'cors'
 	}).then(function (response) {
 		if (response.status !== 200) {
 			console.log('Status Code: ' + response.status);
