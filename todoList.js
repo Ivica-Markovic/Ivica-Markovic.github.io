@@ -251,10 +251,9 @@ fetch("https://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[post
 			return;
 		}
 		response.json().then(function(data) {
-			var notepad = document.getElementById('notepad');
-			var text = data['0'].content
-			console.log(notepad.value);
-			notepad.value = text;
+			var textBox = document.getElementsByClassName('caption');
+			var text = data['0'].content;
+			textBox[0].innerText = text
 			console.log(text);
 		});
 }).catch(function(err) {
