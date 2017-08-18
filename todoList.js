@@ -251,7 +251,7 @@ fetch("https://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[post
 			return;
 		}
 		response.json().then(function(data) {
-			console.log(JSON.stringify(data[0].ID));
+			console.log(data);
 		});
 }).catch(function(err) {
 	console.log(err);
