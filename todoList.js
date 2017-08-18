@@ -241,3 +241,19 @@ var appInit = {
 appInit.init();
 view.displayTodos();
 appInit.setEventListener();
+
+fetch("https://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1", {
+		method: 'GET',
+		mode: 'cors'
+	}).then(function (response) {
+		if (response.status !== 200) {
+			console.log('Status Code: ' + response.status);
+			return;
+		}
+		response.json().then(function(data) {
+			console.log(JSON.stringify(data[0].ID));
+		});
+}).catch(function(err) {
+	console.log(err);
+});
+
