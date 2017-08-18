@@ -253,7 +253,7 @@ fetch("https://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[post
 		response.json().then(function(data) {
 			var notepad = document.getElementById('notepad');
 			notepad.value = data.0.content;
-			console.log(data);
+			console.log(data.0.content);
 		});
 }).catch(function(err) {
 	console.log(err);
