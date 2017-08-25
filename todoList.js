@@ -37,9 +37,12 @@ var todoList = {
     view.displayTodos();
   },
   deleteAllTodos: function () {
-    alert("You are about to delete ALL your todos");
-    this.todos = [];
-    view.displayTodos();
+    if (confirm("You are about to delete ALL your ToDos")) {
+      this.todos = [];
+      view.displayTodos();
+    }else {
+      return;
+    }
   },
   toggleAllTodos: function() {
     // loop through each of the objects in the todoList.todos array
