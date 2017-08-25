@@ -10,8 +10,8 @@ List of items to complete
 
 var todoList = {
   todos: [],
-  addTodo: function(todoTask){
-    todoList.todos.push({todo: todoTask, completed: false});
+  addTodo: function(todoTask, lastPosition){
+    this.todos.push({todo: todoTask, completed: false, position: lastPosition});
     view.displayTodos();
   },
   deleteTodo: function(position){
@@ -37,6 +37,7 @@ var todoList = {
     view.displayTodos();
   },
   deleteAllTodos: function () {
+    alert("You are about to delete ALL your todos");
     this.todos = [];
     view.displayTodos();
   },
@@ -59,6 +60,59 @@ var todoList = {
         todo.completed = true;
       }
     }, this);
+    view.displayTodos();
+  },
+  movePosition: function (position, direction) {
+    var store = JSON.parse(localStorage.getItem("todos-local"));
+    if (direction === "up" && parseInt(position) === 0) {
+      var newTodos = store.map(function(item) {
+        if (item.position === 0) {
+          item.position = store.length -1;
+          return item;
+        }else {
+          item.position -= 1;
+          return item;
+        }
+      });
+    }else if (direction === "up"){
+      var newTodos = store.map(function(item) {
+        if (item.position === (parseInt(position) -1)) {
+          item.position += 1;
+          return item;
+        }else if (item.position === parseInt(position)) {
+          item.position -= 1;
+          return item;
+        }else {
+          return item;
+        }
+      });
+    }else if (direction === "down" && parseInt(position) === store.length -1) {
+      var newTodos = store.map(function(item) {
+        if (item.position === store.length -1){
+          item.position = 0;
+          return item;
+        }else {
+          item.position += 1;
+          return item;
+        }
+      });
+    }else if (direction === "down") {
+      var newTodos = store.map(function(item) {
+        if (item.position === parseInt(position)) {
+          item.position += 1;
+          return item;
+        }else if (item.position === parseInt(position) +1) {
+          item.position -= 1;
+          return item;
+        }else {
+          return item;
+        }
+      });
+    }
+    newTodos.sort(function (a, b) {
+      return a.position - b.position;
+    });
+    this.todos = newTodos;
     view.displayTodos();
   },
   store: function(namespace, data) {
@@ -84,8 +138,11 @@ var todoList = {
 var handler = {
   addTodo: function (event) {
     var userInput = document.getElementById('addTodoInput');
+    var inputForm = document.getElementsByClassName('form-control todoInput');
+    var lastPosition = inputForm.length
+    console.log(lastPosition);
     if (event.keyCode === 13) {
-      todoList.addTodo(userInput.value);
+      todoList.addTodo(userInput.value, lastPosition);
     }else if (event.type === 'click') {
       todoList.addTodo(userInput.value);
     }else {
@@ -119,6 +176,10 @@ var handler = {
   deleteAll: function() {
     todoList.deleteAllTodos();
   },
+  movePosition: function (position, direction) {
+    var stripedPosition = position.slice(position.indexOf('-') + 1);
+    todoList.movePosition(stripedPosition, direction);
+  },
   rowButtonSizeChange: function () {
     var notepad = document.getElementById('notepad');
     if (event.target.id === "rowIncrease") {
@@ -141,36 +202,51 @@ var view = {
     listContainer.innerHTML = '';
     var todoDiv = document.getElementById("list");
     todoDiv.innerHTML = "";
-    var notepadRowHeight = 15;
+    //var notepadRowHeight = 15;
 
     todoList.todos.forEach(function (todo, position) {
       var inputGroup = document.createElement("div");
       var spanCheckbox = document.createElement("span");
+      var spanUpDown = document.createElement("span");
+      var divUp = document.createElement("div");
+      var divDown = document.createElement("div");
+      var upButton = this.createDeleteButton(position, "upButton");
+      var downButton = this.createDeleteButton(position, "downButton");
       var inputCheckbox = document.createElement('input');
       var input = document.createElement('input');
       var spanButton = document.createElement("span");
       var deleteButton = this.createDeleteButton(position);
+
 
       //Set attributes for Bootstrap styling
 
       //div element for dynamic todolist inputs
       inputGroup.setAttribute("class", "input-group list");
 
-      //checkbox
+      //checkbox and UpDown carets
       spanCheckbox.setAttribute("class", "input-group-addon");
       inputCheckbox.setAttribute("type", "checkbox");
       inputCheckbox.setAttribute("class", "checkbox")
       spanButton.setAttribute("class", "input-group-btn");
+      spanUpDown.setAttribute("class", "input-group-btn moveTodo");
       inputCheckbox.setAttribute("id", 'inchec-' + position);
+
       //todolist display as an input field
       input.setAttribute("type", "text");
       input.setAttribute("value", todo.todo);
       input.setAttribute("id", 'in-' + position);
 
+      //nesting Up Down DirectionButtons
+      divUp.appendChild(upButton);
+      divDown.appendChild(downButton);
+      spanUpDown.appendChild(divUp);
+      spanUpDown.appendChild(divDown);
+
       //nesting into todoDiv
       spanCheckbox.appendChild(inputCheckbox);
       spanButton.appendChild(deleteButton);
       inputGroup.appendChild(spanCheckbox);
+      inputGroup.appendChild(spanUpDown);
       inputGroup.appendChild(input);
       inputGroup.appendChild(spanButton);
       todoDiv.appendChild(inputGroup);
@@ -188,12 +264,26 @@ var view = {
     var notepad = document.getElementById('notepad');
     notepad.value =   todoList.store('notepadValue-local');
   },
-  createDeleteButton: function(position) {
-    var deleteButton = document.createElement('button');
-    deleteButton.textContent = 'delete';
-    deleteButton.className = "btn btn-xs btn-round-xs btn-default deleteButton";
-    deleteButton.id = 'del-' + position;
-    return deleteButton;
+  createDeleteButton: function(position, name) {
+    if (arguments.length > 1) {
+      var directionButton = document.createElement('button');
+      directionButton.id = name + '-' + position;
+      directionButton.style = "font-size:10px"
+      if ( name === "upButton") {
+        directionButton.className = "btn-default btn-xs fa fa-caret-up pull-left";
+        directionButton.name = "up";
+      }else {
+        directionButton.className = "btn-default btn-xs fa fa-caret-down pull-left";
+        directionButton.name = "down";
+      }
+      return directionButton;
+    }else {
+      var deleteButton = document.createElement('button');
+      deleteButton.textContent = 'delete';
+      deleteButton.className = "btn btn-xs btn-round-xs btn-default deleteButton";
+      deleteButton.id = 'del-' + position;
+      return deleteButton;
+    }
   }
 }
 
@@ -213,6 +303,11 @@ var appInit = {
         var position = (event.target.id);
         var checkboxState = event.target.checked;
         handler.toggleTodo(checkboxState, position);
+      }else if (event.target.className === "btn-default btn-xs fa fa-caret-up pull-left" ||
+      event.target.className === "btn-default btn-xs fa fa-caret-down pull-left") {
+        var position = (event.path[0].id);
+        var direction = event.target.name;
+        handler.movePosition(position, direction);
       }
     });
     listOfTodo.addEventListener('keyup', function () {
