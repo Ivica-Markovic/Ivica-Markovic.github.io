@@ -213,12 +213,12 @@ var view = {
       var spanUpDown = document.createElement("span");
       var divUp = document.createElement("div");
       var divDown = document.createElement("div");
-      var upButton = this.createDeleteButton(position, "upButton");
-      var downButton = this.createDeleteButton(position, "downButton");
+      var upButton = this.createButton(position, "upButton");
+      var downButton = this.createButton(position, "downButton");
       var inputCheckbox = document.createElement('input');
       var input = document.createElement('input');
       var spanButton = document.createElement("span");
-      var deleteButton = this.createDeleteButton(position);
+      var deleteButton = this.createButton(position);
 
 
       //Set attributes for Bootstrap styling
@@ -267,17 +267,18 @@ var view = {
     var notepad = document.getElementById('notepad');
     notepad.value =   todoList.store('notepadValue-local');
   },
-  createDeleteButton: function(position, name) {
+  createButton: function(position, name) {
     if (arguments.length > 1) {
       var directionButton = document.createElement('button');
       directionButton.id = name + '-' + position;
-      directionButton.style = "font-size:10px"
       if ( name === "upButton") {
-        directionButton.className = "btn-default btn-xs fa fa-caret-up pull-left";
+        directionButton.className = "btn-default btn-xs directionButton";
         directionButton.name = "up";
+        directionButton.innerText = "▲"
       }else {
-        directionButton.className = "btn-default btn-xs fa fa-caret-down pull-left";
+        directionButton.className = "btn-default btn-xs directionButton";
         directionButton.name = "down";
+        directionButton.innerText = "▼"
       }
       return directionButton;
     }else {
@@ -306,8 +307,7 @@ var appInit = {
         var position = (event.target.id);
         var checkboxState = event.target.checked;
         handler.toggleTodo(checkboxState, position);
-      }else if (event.target.className === "btn-default btn-xs fa fa-caret-up pull-left" ||
-      event.target.className === "btn-default btn-xs fa fa-caret-down pull-left") {
+      }else if (event.target.name === "up" || event.target.name === "down") {
         var position = (event.path[0].id);
         var direction = event.target.name;
         handler.movePosition(position, direction);
