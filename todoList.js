@@ -33,6 +33,10 @@ var todoList = {
     var newTodos = todoList.todos.filter(function(todos) {
       return todos.completed === false;
     })
+    newTodos.forEach(function (todo, index) {
+      todo.position = index;
+    })
+    console.log(newTodos)
     todoList.todos = newTodos;
     view.displayTodos();
   },
@@ -143,7 +147,6 @@ var handler = {
     var userInput = document.getElementById('addTodoInput');
     var inputForm = document.getElementsByClassName('form-control todoInput');
     var lastPosition = inputForm.length
-    console.log(lastPosition);
     if (event.keyCode === 13) {
       todoList.addTodo(userInput.value, lastPosition);
     }else if (event.type === 'click') {
