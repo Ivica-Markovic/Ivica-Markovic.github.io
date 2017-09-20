@@ -15,7 +15,12 @@ var todoList = {
     view.displayTodos();
   },
   deleteTodo: function(position){
-    this.todos.splice(position, 1);
+    var newTodos = this.todos
+    newTodos.splice(position, 1);
+    newTodos.forEach(function (todo, index) {
+      todo.position = index;
+    })
+    todoList.todos = newTodos;
     view.displayTodos();
   },
   changeTodo: function(position, value) {
@@ -36,7 +41,6 @@ var todoList = {
     newTodos.forEach(function (todo, index) {
       todo.position = index;
     })
-    console.log(newTodos)
     todoList.todos = newTodos;
     view.displayTodos();
   },
